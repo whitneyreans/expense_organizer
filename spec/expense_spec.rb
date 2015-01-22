@@ -13,7 +13,7 @@ end
 describe(Expense) do
   describe('#save') do
     it ("allows you to add and track an expense") do
-      expense1 = Expense.new({:description => "coffee", :amount => 3, :date => "2015-01-22"})
+      expense1 = Expense.new({:id => nil, :description => "coffee", :amount => 3, :date => "2015-01-22"})
       expense1.save()
       expect(Expense.all()).to(eq([expense1]))
     end
@@ -21,25 +21,36 @@ describe(Expense) do
 
   describe('.all') do
     it "lists all expenses" do
-      expense1 = Expense.new(:description => "coffee", :amount => 3, :date => "2015-01-22")
+      expense1 = Expense.new(:id => nil, :description => "coffee", :amount => 3, :date => "2015-01-22")
       expense1.save()
-      expense2 = Expense.new(:description => "coffee", :amount => 3, :date => "2015-01-22")
+      expense2 = Expense.new(:id => nil, :description => "coffee", :amount => 3, :date => "2015-01-22")
       expense2.save()
       expect(Expense.all()).to(eq([expense1, expense2]))
     end
   end
+
+  describe('#id') do
+    it "sets the id of the expense" do
+      expense1 = Expense.new(:id => nil, :description => "coffee", :amount => 3, :date => "2015-01-22")
+      expense1.save()
+      expect(expense1.id).to(be_an_instance_of(Fixnum))
+    end
+  end
+
+  describe('#==') do
+    it("sets equal expenses with the same amount, description, and date") do
+    end
+  end
+
+  describe('.find') do
+    it "finds the expense by its id" do
+      expense1 = Expense.new(:id => nil, :description => "coffee", :amount => 3, :date => "2015-01-22")
+      expense1.save()
+      expense2 = Expense.new(:id => nil, :description => "coffee", :amount => 3, :date => "2015-01-22")
+      expense2.save()
+      expect(Expense.find(expense1.id)).to eq([expense1])
+    end
+  end
+
+
 end
-
-
-
-
-
-
-
-
-
-
-# Create an app for organizing your expenses. Here are some user stories for you - build one at a time before moving to the next one:
-#
-# As a user, I want to enter an expense, so I can keep track of where I'm spending my money. I should be able to provide a description
-# (for example, "Burgers"), an amount ($7.56), and the date I made the purchase.
