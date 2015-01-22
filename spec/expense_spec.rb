@@ -39,6 +39,11 @@ describe(Expense) do
 
   describe('#==') do
     it("sets equal expenses with the same amount, description, and date") do
+      expense1 = Expense.new(:id => nil, :description => "coffee", :amount => 3, :date => "2015-01-22")
+      expense1.save()
+      expense2 = Expense.new(:id => nil, :description => "coffee", :amount => 3, :date => "2015-01-22")
+      expense2.save()
+      expect(expense1.==(expense2)).to(eq(true))
     end
   end
 
