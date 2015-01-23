@@ -34,8 +34,30 @@ class Category
     found_category
   end
 
-
   define_method(:==) do |other_category|
     name.==(other_category.name())
+  end
+
+  define_method(:add_expense) do |expense|
+    expense_id = expense.id().to_i
+    self_id = self.id().to_i
+    DB.exec("INSERT INTO expenses_categories (expense_id, category_id) VALUES (#{expense_id}, #{self.id()});")
+  end
+
+  define_method(:expenses) do
+    self_id = self.id()
+    expense_array = []
+    expenses = DB.exec("SELECT expenses.* FROM
+    categories JOIN expenses_categories ON
+    (categories.id = expenses_categories.expense_id)
+    JOIN expenses ON (expenses_categories.category_id = categories.id)
+    WHERE categories.id = #{self.id()};")
+    expenses.each() do |expense|
+      description = expense.fetch("description")
+      amount = expense.fetch("amount")
+      date = expense.fetch("date")
+      expense_array.push(Expense.new({:description => description, :amount => amount, :date => date}))
+    end
+    expense_array
   end
 end

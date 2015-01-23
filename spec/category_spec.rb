@@ -1,15 +1,4 @@
-require('rspec')
-require('expense')
-require('category')
-require('pg')
-
-DB = PG.connect({:dbname => 'expense_organizer_test'})
-
-RSpec.configure do |config|
-  config.after(:each) do
-    DB.exec("DELETE FROM categories *;")
-  end
-end
+require("spec_helper")
 
 describe(Category) do
   describe('#save') do
@@ -55,6 +44,17 @@ describe(Category) do
       category2 = Category.new({:name => "Beer", :id => nil})
       category2.save()
       expect(Category.find(category1.id)).to(eq([category1]))
+    end
+  end
+
+  describe("#add_expense") do
+    it("adds an expense to a category") do
+      category1 = Category.new({:name => "Beer", :id => nil})
+      category1.save()
+      expense1 = Expense.new({:id => nil, :description => "coffee", :amount => 3, :date => "2015-01-22"})
+      expense1.save()
+      category1.add_expense(expense1)
+      expect(category1.expenses()).to(eq([expense1]))
     end
   end
 
